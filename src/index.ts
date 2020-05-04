@@ -1,14 +1,33 @@
-import http from 'http'
+import express from 'express'
+import cookieParser from 'cookie-parser'
 
-const hostname = '0.0.0.0'
-const port = 3000
+const app = express()
 
-const server = http.createServer((req, res) => {
-  res.statusCode = 200
-  res.setHeader('Content-Type', 'text/plain')
-  res.end('Hello World!\n')
+app.use(cookieParser())
+
+app.get('/', (req, res) => {
+  console.log(req.cookies)
+  res.send('Hello World')
 })
 
-server.listen(port, hostname, () => {
-  console.log(`Server running at http://${hostname}:${port}/`)
+app.get('/login', (req, res) => {
+  const defaultCookieConfig = {
+    domain: '.nsctotal.local'
+  }
+
+  res.cookie('foo', 'asdsdfas', defaultCookieConfig)
+  res.send('Login')
+})
+
+app.get('/logout', (req, res) => {
+  const defaultCookieConfig = {
+    domain: '.nsctotal.local'
+  }
+
+  res.clearCookie('foo', defaultCookieConfig)
+  res.send('Logout')
+})
+
+app.listen(3000, () => {
+  console.log(`Server running at http://localhost:3000/`)
 })
